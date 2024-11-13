@@ -1,10 +1,12 @@
 package lk.ijse.crop_monitoring_system.controller;
 
 import lk.ijse.crop_monitoring_system.dto.CropDTO;
+import lk.ijse.crop_monitoring_system.exception.CropNotFoundException;
+import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.service.CropService;
 import lk.ijse.crop_monitoring_system.util.AppUtil;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.DataException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequestMapping("api/v1/crops")
 @RequiredArgsConstructor
 @CrossOrigin("*")
+@Slf4j
 public class CropController {
     private final CropService cropService;
 
@@ -38,10 +41,16 @@ public class CropController {
             cropDTO.setSeason(season);
 
             cropService.saveCrop(cropDTO);
+            log.info("Save crop successfully");
             return new ResponseEntity<>(HttpStatus.CREATED);
-        }catch (DataException e){
+        }catch (CropNotFoundException e) {
+            log.error("Crop not found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (DataPersistFailedException e){
+            log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
+            log.error("Something went wrong while saving crop.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -50,16 +59,20 @@ public class CropController {
     public ResponseEntity<Void> deleteCrop(@PathVariable("cropId") String cropId) {
         try {
             cropService.deleteCrop(cropId);
+            log.info("Crop with ID: {} deleted successfully", cropId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (DataException e) {
+        } catch (CropNotFoundException e) {
+            log.warn("No Crop found with ID: {}", cropId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
+            log.error("Something went wrong while deleting crop with ID: {}", cropId);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "allCrop", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CropDTO> getAllCrop(){
+        log.info("Get all crops successfully");
         return cropService.getAllCrop();
     }
 
@@ -83,10 +96,16 @@ public class CropController {
             updateCrop.setSeason(updateSeason);
 
             cropService.updateCrop(cropId, updateCrop);
+            log.info("Status of crop with ID: {} updated successfully", cropId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (DataException e){
+        }catch (CropNotFoundException e) {
+            log.warn("No crop found with ID: {}", cropId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (DataPersistFailedException e){
+            log.error("failed due to data persistence issue.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
+            log.error("Something went wrong while updating crop with ID: {}", cropId);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
