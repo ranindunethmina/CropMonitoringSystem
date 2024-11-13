@@ -42,7 +42,7 @@ Green Shadow (Pvt) Ltd. has expanded their production facilities and requires a 
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/RaninduNethmina/crop-monitoring-system.git
+    git clone https://github.com/ranindunethmina/CropMonitoringSystem.git
     cd crop-monitoring-system
     ```
 
