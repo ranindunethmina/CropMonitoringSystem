@@ -1,6 +1,6 @@
 package lk.ijse.crop_monitoring_system.repository;
 
-import lk.ijse.courseWork.entity.Crop;
+import lk.ijse.crop_monitoring_system.entity.Crop;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
