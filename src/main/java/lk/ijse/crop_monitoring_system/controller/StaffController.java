@@ -1,6 +1,7 @@
 package lk.ijse.crop_monitoring_system.controller;
 
 import lk.ijse.crop_monitoring_system.dto.StaffDTO;
+import lk.ijse.crop_monitoring_system.dto.VehicleDTO;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.exception.StaffNotFoundException;
 import lk.ijse.crop_monitoring_system.service.StaffService;
@@ -40,6 +41,12 @@ public class StaffController {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
+    }
+
+    @GetMapping(value = "/{staffId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public StaffDTO getStaff (@PathVariable("staffId") String staffId) {
+        log.info("Staff with ID: {} retrieved successfully", staffId);
+        return staffService.getSelectedStaff(staffId);
     }
 
     @GetMapping(value = "allStaff", produces = MediaType.APPLICATION_JSON_VALUE)

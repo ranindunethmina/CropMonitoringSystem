@@ -1,6 +1,7 @@
 package lk.ijse.crop_monitoring_system.controller;
 
 import lk.ijse.crop_monitoring_system.dto.LogDTO;
+import lk.ijse.crop_monitoring_system.dto.StaffDTO;
 import lk.ijse.crop_monitoring_system.service.LogService;
 import lk.ijse.crop_monitoring_system.util.AppUtil;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,12 @@ public class logController {
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/{logId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public LogDTO getLog (@PathVariable("logId") String logId) {
+        log.info("Log with ID: {} retrieved successfully", logId);
+        return logService.getSelectedLog(logId);
     }
 
     @GetMapping(value = "allLogs", produces = MediaType.APPLICATION_JSON_VALUE)

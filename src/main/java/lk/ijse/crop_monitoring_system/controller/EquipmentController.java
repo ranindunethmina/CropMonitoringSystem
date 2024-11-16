@@ -1,6 +1,7 @@
 package lk.ijse.crop_monitoring_system.controller;
 
 import lk.ijse.crop_monitoring_system.dto.EquipmentDTO;
+import lk.ijse.crop_monitoring_system.dto.StaffDTO;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.exception.EquipmentNotFoundException;
 import lk.ijse.crop_monitoring_system.service.EquipmentService;
@@ -43,6 +44,12 @@ public class EquipmentController {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
+    }
+
+    @GetMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public EquipmentDTO getEquipment (@PathVariable("equipmentId") String equipmentId) {
+        log.info("Equipment with ID: {} retrieved successfully", equipmentId);
+        return equipmentService.getSelectedEquipment(equipmentId);
     }
 
     @GetMapping(value = "allEquipment", produces = MediaType.APPLICATION_JSON_VALUE)

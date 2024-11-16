@@ -1,6 +1,7 @@
 package lk.ijse.crop_monitoring_system.controller;
 
 import lk.ijse.crop_monitoring_system.dto.CropDTO;
+import lk.ijse.crop_monitoring_system.dto.EquipmentDTO;
 import lk.ijse.crop_monitoring_system.exception.CropNotFoundException;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.service.CropService;
@@ -68,6 +69,12 @@ public class CropController {
             log.error("Something went wrong while deleting crop with ID: {}", cropId);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/{cropId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public CropDTO getCrop (@PathVariable("cropId") String cropId) {
+        log.info("Crop with ID: {} retrieved successfully", cropId);
+        return cropService.getSelectedCrop(cropId);
     }
 
     @GetMapping(value = "allCrop", produces = MediaType.APPLICATION_JSON_VALUE)
