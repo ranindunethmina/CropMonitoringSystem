@@ -45,6 +45,6 @@ public class Field implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "id")
     )    private List<Staff> staff;
 
-    @ManyToMany(mappedBy = "field")
+    @ManyToMany(mappedBy = "field", cascade = CascadeType.ALL)
     private List<Log> log;
 }

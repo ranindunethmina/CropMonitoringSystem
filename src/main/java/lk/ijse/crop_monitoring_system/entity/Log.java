@@ -36,15 +36,13 @@ public class Log implements Serializable {
     @JoinTable(
             name="log_crop",
             joinColumns = @JoinColumn(name="logCode"),
-            inverseJoinColumns = @JoinColumn(name="cropCode")
-    )
+            inverseJoinColumns = @JoinColumn(name="cropCode"))
     private List<Crop> crop;
 
     @ManyToMany
     @JoinTable(
             name="log_staff",
             joinColumns = @JoinColumn(name="logCode"),
-            inverseJoinColumns = @JoinColumn(name = "id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "id"))
     private List<Staff> staff;
 }

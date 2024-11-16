@@ -41,6 +41,11 @@ public class VehicleController {
             }
         }
     }
+    @GetMapping(value = "/{vehicleId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public VehicleDTO getVehicle (@PathVariable("vehicleId") String vehicleId) {
+        log.info("Vehicle with ID: {} retrieved successfully", vehicleId);
+        return vehicleService.getSelectedVehicle(vehicleId);
+    }
 
     @GetMapping(value = "allVehicle", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VehicleDTO> getAllVehicle(){

@@ -68,9 +68,9 @@ public class Staff implements Serializable {
     @ManyToMany(mappedBy = "staff", cascade = CascadeType.ALL)
     private List<Field> field;
 
-    @ManyToMany(mappedBy = "staff")
+    @ManyToMany(mappedBy = "staff", cascade = CascadeType.ALL)
     private List<Log> log;
 
-    @OneToOne(mappedBy = "staff")
+    @OneToOne(mappedBy = "staff", cascade = CascadeType.ALL)
     private Equipment equipment;
 }

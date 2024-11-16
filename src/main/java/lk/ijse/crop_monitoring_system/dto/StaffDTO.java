@@ -20,7 +20,7 @@ public class StaffDTO implements Serializable {
     @NotBlank(message = "First Name cannot be empty")
     @Size(min = 3, max = 150, message = "Name must be between 3 and 150 characters")
     private String firstName;
-    @NotBlank(message = "First Name cannot be empty")
+    @NotBlank(message = "Last Name cannot be empty")
     @Size(min = 3, max = 150, message = "Name must be between 3 and 150 characters")
     private String lastName;
     private String designation;
