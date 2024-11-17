@@ -1,7 +1,6 @@
 package lk.ijse.crop_monitoring_system.controller;
 
 import lk.ijse.crop_monitoring_system.dto.CropDTO;
-import lk.ijse.crop_monitoring_system.dto.EquipmentDTO;
 import lk.ijse.crop_monitoring_system.exception.CropNotFoundException;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.service.CropService;
@@ -26,11 +25,12 @@ public class CropController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> saveCrop(
-            @RequestPart("commonName") String commonName,
+            @RequestPart ("commonName") String commonName,
             @RequestPart ("scientificName") String scientificName,
-            @RequestPart("cropImage") MultipartFile cropImage,
+            @RequestPart ("cropImage") MultipartFile cropImage,
             @RequestPart ("category") String category,
-            @RequestPart ("season") String season) {
+            @RequestPart ("season") String season,
+            @RequestPart ("fieldCode") String fieldCode) {
         try {
             String base64cropImage = AppUtil.toBase64(cropImage);
 
@@ -40,6 +40,7 @@ public class CropController {
             cropDTO.setCropImage(base64cropImage);
             cropDTO.setCategory(category);
             cropDTO.setSeason(season);
+            cropDTO.setFieldCode(fieldCode);
 
             cropService.saveCrop(cropDTO);
             log.info("Save crop successfully");

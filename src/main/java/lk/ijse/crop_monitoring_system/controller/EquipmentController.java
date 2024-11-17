@@ -1,7 +1,6 @@
 package lk.ijse.crop_monitoring_system.controller;
 
 import lk.ijse.crop_monitoring_system.dto.EquipmentDTO;
-import lk.ijse.crop_monitoring_system.dto.StaffDTO;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.exception.EquipmentNotFoundException;
 import lk.ijse.crop_monitoring_system.service.EquipmentService;
