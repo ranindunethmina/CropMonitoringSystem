@@ -20,7 +20,7 @@ public class Field implements Serializable {
     @Column(length = 50, nullable = false)
     private String fieldName;
 
-    @Column(columnDefinition = "GEOMETRY", nullable = false)
+    @Column(nullable = false)
     private Point location;
 
     @Column(nullable = false)
