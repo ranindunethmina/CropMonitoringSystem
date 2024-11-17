@@ -1,10 +1,16 @@
 package lk.ijse.crop_monitoring_system.service.impl;
 
 import lk.ijse.crop_monitoring_system.dto.LogDTO;
+import lk.ijse.crop_monitoring_system.entity.Crop;
+import lk.ijse.crop_monitoring_system.entity.Field;
 import lk.ijse.crop_monitoring_system.entity.Log;
+import lk.ijse.crop_monitoring_system.entity.Staff;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.exception.LogNotFoundException;
+import lk.ijse.crop_monitoring_system.repository.CropRepository;
+import lk.ijse.crop_monitoring_system.repository.FieldRepository;
 import lk.ijse.crop_monitoring_system.repository.LogRepository;
+import lk.ijse.crop_monitoring_system.repository.StaffRepository;
 import lk.ijse.crop_monitoring_system.service.LogService;
 import lk.ijse.crop_monitoring_system.util.AppUtil;
 import lk.ijse.crop_monitoring_system.util.Mapping;
@@ -12,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +27,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LogServiceImpl implements LogService {
     private final LogRepository logRepository;
+    private final FieldRepository fieldRepository;
+    private final StaffRepository staffRepository;
+    private final CropRepository cropRepository;
     private final Mapping mapping;
 
     @Override
     public void saveLog(LogDTO logDTO) {
+        List<Field> field = new ArrayList<>();
+        List<Crop> crops = new ArrayList<>();
+        List<Staff> staff = new ArrayList<>();
+
+        for(String fieldCode:logDTO.getFieldCodes()){
+            fieldRepository.findById(fieldCode).ifPresent(field::add);
+        }
+        for(String cropCode:logDTO.getCropCodes()){
+            cropRepository.findById(cropCode).ifPresent(crops::add);
+        }
+        for(String staffId:logDTO.getStaffIds()){
+            staffRepository.findById(staffId).ifPresent(staff::add);
+        }
+
         logDTO.setLogCode(AppUtil.createLogID());
         var log = mapping.convertToLog(logDTO);
+        log.setDetails(logDTO.getDetails());
+        log.setField(field);
+        log.setCrop(crops);
+        log.setStaff(staff);
+
         var savedLog = logRepository.save(log);
         if (savedLog == null){
             throw new DataPersistFailedException("Could not save log");
