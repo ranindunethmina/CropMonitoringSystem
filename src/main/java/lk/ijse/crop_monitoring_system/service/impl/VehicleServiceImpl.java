@@ -1,6 +1,7 @@
 package lk.ijse.crop_monitoring_system.service.impl;
 
 import lk.ijse.crop_monitoring_system.dto.VehicleDTO;
+import lk.ijse.crop_monitoring_system.entity.Status;
 import lk.ijse.crop_monitoring_system.entity.Vehicle;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.exception.VehicleNotFoundException;
@@ -41,7 +42,7 @@ public class VehicleServiceImpl implements VehicleService {
             tmpVehicleEntity.get().setLicensePlate(vehicleDTO.getLicensePlate());
             tmpVehicleEntity.get().setCategory(vehicleDTO.getCategory());
             tmpVehicleEntity.get().setFuelType(vehicleDTO.getFuelType());
-            tmpVehicleEntity.get().setStatus(vehicleDTO.getStatus());
+            tmpVehicleEntity.get().setStatus(Status.valueOf(vehicleDTO.getStatus()));
             tmpVehicleEntity.get().setRemarks(vehicleDTO.getRemarks());
         }
     }

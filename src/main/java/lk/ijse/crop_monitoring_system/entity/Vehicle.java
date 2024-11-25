@@ -25,7 +25,8 @@ public class Vehicle implements Serializable {
     private String fuelType;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(nullable = false)
     private String remarks;

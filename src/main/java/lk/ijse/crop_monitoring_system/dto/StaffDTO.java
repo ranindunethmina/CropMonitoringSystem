@@ -42,6 +42,6 @@ public class StaffDTO implements Serializable {
 
     private List<String> vehicleIds;
     private List<String> fieldCodes;
-    private List<String> logIds;
+//    private List<String> logIds;
     private String equipmentId;
 }
