@@ -30,11 +30,8 @@ public class FieldController {
             @RequestParam("fieldLocation") String location,
             @RequestParam("fieldSize") double extentSize,
             @RequestParam("fieldImage1") MultipartFile fieldImage1,
-            @RequestParam("fieldImage2") MultipartFile fieldImage2,
-            @RequestParam("cropCodes") List<String> cropCodes,
-            @RequestParam("equipmentIds") List<String> equipmentIds,
-            @RequestParam("staffIds") List<String> staffIds,
-            @RequestParam("logIds") List<String> logIds){
+            @RequestParam("fieldImage2") MultipartFile fieldImage2
+    ){
         try {
             String[] coords = location.split(",");
             int x = Integer.parseInt(coords[0]);
@@ -50,10 +47,6 @@ public class FieldController {
             fieldDTO.setExtentSize(extentSize);
             fieldDTO.setFieldImage1(base64fieldImage1);
             fieldDTO.setFieldImage2(base64fieldImage2);
-            fieldDTO.setCropCodes(cropCodes);
-            fieldDTO.setEquipmentIds(equipmentIds);
-            fieldDTO.setStaffIds(staffIds);
-            fieldDTO.setLogIds(logIds);
 
             fieldService.saveField(fieldDTO);
             log.info("Save Field successfully");
@@ -78,10 +71,8 @@ public class FieldController {
             @RequestParam("fieldSize") double updateExtentSize,
             @RequestParam("fieldImage1") MultipartFile updateFieldImage1,
             @RequestParam("fieldImage2") MultipartFile updateFieldImage2,
-            @RequestParam("cropCodes") List<String> cropCodes,
-            @RequestParam("equipmentIds") List<String> equipmentIds,
-            @RequestParam("staffIds") List<String> staffIds,
-            @RequestParam("logIds") List<String> logIds){
+            @RequestParam("staffIds") List<String> staffIds
+    ){
         try {
             String[] coords = updateLocation.split(",");
             int x = Integer.parseInt(coords[0]);
@@ -92,17 +83,14 @@ public class FieldController {
             String updateBase64fieldImage2 = AppUtil.toBase64(updateFieldImage2);
 
             FieldDTO fieldDTO = new FieldDTO();
+            fieldDTO.setFieldCode(fieldCode);
             fieldDTO.setFieldName(updateFieldName);
             fieldDTO.setLocation(fieldLocationP);
             fieldDTO.setExtentSize(updateExtentSize);
             fieldDTO.setFieldImage1(updateBase64fieldImage1);
             fieldDTO.setFieldImage2(updateBase64fieldImage2);
-            fieldDTO.setCropCodes(cropCodes);
-            fieldDTO.setEquipmentIds(equipmentIds);
-            fieldDTO.setStaffIds(staffIds);
-            fieldDTO.setLogIds(logIds);
 
-            fieldService.updateField(fieldCode, fieldDTO);
+            fieldService.updateField(staffIds, fieldDTO);
             log.info("Update Field successfully");
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (FieldNotFoundException e) {

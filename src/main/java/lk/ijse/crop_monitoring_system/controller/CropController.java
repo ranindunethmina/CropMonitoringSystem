@@ -91,7 +91,8 @@ public class CropController {
             @RequestPart ("scientificName") String updateScientificName,
             @RequestPart("cropImage") MultipartFile updateCropImage,
             @RequestPart ("category") String updateCategory,
-            @RequestPart ("season") String updateSeason) {
+            @RequestPart ("season") String updateSeason,
+            @RequestPart ("fieldCode") String fieldCode) {
         try {
             String updateBase64cropImage = AppUtil.toBase64(updateCropImage);
 
@@ -102,6 +103,7 @@ public class CropController {
             updateCrop.setCropImage(updateBase64cropImage);
             updateCrop.setCategory(updateCategory);
             updateCrop.setSeason(updateSeason);
+            updateCrop.setFieldCode(fieldCode);
 
             cropService.updateCrop(cropId, updateCrop);
             log.info("Status of crop with ID: {} updated successfully", cropId);

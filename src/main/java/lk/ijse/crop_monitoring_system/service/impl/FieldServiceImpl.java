@@ -22,38 +22,12 @@ import java.util.Optional;
 public class FieldServiceImpl implements FieldService {
     private final FieldRepository fieldRepository;
     private final StaffRepository staffRepository;
-    private final CropRepository cropRepository;
-    private final EquipmentRepository equipmentRepository;
-    private final LogRepository logRepository;
     private final Mapping mapping;
 
     @Override
     public void saveField(FieldDTO fieldDTO) {
-        List<Staff> staff = new ArrayList<>();
-        List<Crop> crop = new ArrayList<>();
-        List<Equipment> equipment = new ArrayList<>();
-        List<Log> log = new ArrayList<>();
-
-        for (String staffId : fieldDTO.getStaffIds()) {
-            staffRepository.findById(staffId).ifPresent(staff::add);
-        }
-        for (String cropCode : fieldDTO.getCropCodes()) {
-            cropRepository.findById(cropCode).ifPresent(crop ::add);
-        }
-        for (String equipmnetId : fieldDTO.getEquipmentIds()) {
-            equipmentRepository.findById(equipmnetId).ifPresent(equipment ::add);
-        }
-        for (String logId : fieldDTO.getLogIds()) {
-            logRepository.findById(logId).ifPresent(log ::add);
-        }
-
         fieldDTO.setFieldCode(AppUtil.createFieldId());
         var field = mapping.convertToField(fieldDTO);
-        field.setStaff(staff);
-        field.setCrop(crop);
-        field.setEquipment(equipment);
-        field.setLog(log);
-
         var savedField = fieldRepository.save(field);
         if (savedField == null) {
             throw new DataPersistFailedException("Cannot save field");
@@ -61,16 +35,23 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public void updateField(String fieldId, FieldDTO fieldDTO) {
-        Optional<Field> tmpFieldEntity = fieldRepository.findById(fieldId);
+    public void updateField(List<String> staffIds, FieldDTO fieldDTO) {
+        Optional<Field> tmpFieldEntity = fieldRepository.findById(fieldDTO.getFieldCode());
         if (!tmpFieldEntity.isPresent()) {
             throw new FieldNotFoundException("Field not found");
         } else {
+            Field field = mapping.convertToField(fieldDTO);
+            List<Staff> staff = new ArrayList<>();
+            for (String staffId : staffIds) {
+                Optional<Staff> optional = staffRepository.findById(staffId);
+                optional.ifPresent(staff::add);
+            }
             tmpFieldEntity.get().setFieldName(fieldDTO.getFieldName());
             tmpFieldEntity.get().setLocation(fieldDTO.getLocation());
             tmpFieldEntity.get().setExtentSize(fieldDTO.getExtentSize());
             tmpFieldEntity.get().setFieldImage1(fieldDTO.getFieldImage1());
             tmpFieldEntity.get().setFieldImage2(fieldDTO.getFieldImage2());
+            tmpFieldEntity.get().setStaff(staff);
         }
     }
 

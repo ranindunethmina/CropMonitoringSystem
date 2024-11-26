@@ -19,8 +19,8 @@ public class FieldDTO implements Serializable {
     private String fieldImage1;
     private String fieldImage2;
 
-    private List<String> cropCodes;
-    private List<String> equipmentIds;
+//    private List<String> cropCodes;
+//    private List<String> equipmentIds;
     private List<String> staffIds;
-    private List<String> logIds;
+//    private List<String> logIds;
 }

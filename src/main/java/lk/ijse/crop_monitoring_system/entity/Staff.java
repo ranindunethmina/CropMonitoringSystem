@@ -1,6 +1,5 @@
 package lk.ijse.crop_monitoring_system.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -64,18 +63,14 @@ public class Staff implements Serializable {
     private Role role;
 
     @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Vehicle> vehicle;
 
     @ManyToMany(mappedBy = "staff", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Field> field;
 
     @ManyToMany(mappedBy = "staff", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Log> log;
 
     @OneToOne(mappedBy = "staff", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Equipment equipment;
 }
