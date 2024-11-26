@@ -63,7 +63,7 @@ public class VehicleController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             vehicleService.updateVehicle(vehicleId, vehicleDTO);
-            log.info("Vehicle updated successfully: {}", vehicleDTO.getVehicleCode());
+            log.info("Vehicle updated successfully: {}", vehicleId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (VehicleNotFoundException e){
             log.error("failed due to data persistence issue.");

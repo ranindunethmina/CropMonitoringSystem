@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UserDTO userDTO) {
-
+        userRepository.save(mapping.convertToUser(userDTO));
     }
 
     @Override

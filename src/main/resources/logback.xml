@@ -7,7 +7,7 @@
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>D:\IJSE\AAD\cropMonitoringSystem\src\main\resources\app.log</file>
+        <file>D:\IJSE\AAD\Crop monitoring system\src\main\resources\app.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>

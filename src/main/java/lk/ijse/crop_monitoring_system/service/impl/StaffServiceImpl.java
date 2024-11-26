@@ -1,10 +1,7 @@
 package lk.ijse.crop_monitoring_system.service.impl;
 
 import lk.ijse.crop_monitoring_system.dto.StaffDTO;
-import lk.ijse.crop_monitoring_system.entity.Designation;
-import lk.ijse.crop_monitoring_system.entity.Gender;
-import lk.ijse.crop_monitoring_system.entity.Role;
-import lk.ijse.crop_monitoring_system.entity.Staff;
+import lk.ijse.crop_monitoring_system.entity.*;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.exception.StaffNotFoundException;
 import lk.ijse.crop_monitoring_system.repository.StaffRepository;
@@ -14,6 +11,7 @@ import lk.ijse.crop_monitoring_system.util.Mapping;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +29,7 @@ public class StaffServiceImpl implements StaffService {
         var staff = mapping.convertToStaff(staffDTO);
         var savedStaff = staffRepository.save(staff);
         if (savedStaff == null) {
-            throw new DataPersistFailedException("Cannnot save staff");
+            throw new DataPersistFailedException("Can't save the staff");
         }
     }
 
