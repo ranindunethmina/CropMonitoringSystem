@@ -32,9 +32,9 @@ public class Crop implements Serializable {
     private String season;
 
     @ManyToOne
-    @JoinColumn(name = "fieldCode")
+    @JoinColumn(name = "fieldCode", nullable = false)
     private Field field;
 
-    @ManyToMany(mappedBy = "crop")
+    @ManyToMany(mappedBy = "crop", cascade = CascadeType.REMOVE)
     private List<Log> log;
 }

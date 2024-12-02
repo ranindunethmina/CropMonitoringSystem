@@ -62,15 +62,15 @@ public class Staff implements Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff")
     private List<Vehicle> vehicle;
 
-    @ManyToMany(mappedBy = "staff", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "staff")
     private List<Field> field;
 
-    @ManyToMany(mappedBy = "staff", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "staff")
     private List<Log> log;
 
-    @OneToOne(mappedBy = "staff", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "staff")
     private Equipment equipment;
 }

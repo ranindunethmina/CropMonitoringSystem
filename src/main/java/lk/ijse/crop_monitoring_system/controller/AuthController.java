@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/v1/auth")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 @Slf4j
 public class AuthController {
     private final AuthService authService;
@@ -24,8 +25,6 @@ public class AuthController {
 
     @PostMapping(value = "signup",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthDTO> signUp(@RequestBody UserDTO userDTO){
-//        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-//        return ResponseEntity.ok(authService.signUp(userDto));
         log.info("Received request to save user: {}", userDTO);
         if (userDTO == null){
             log.warn("Received null userDTO");
@@ -48,10 +47,12 @@ public class AuthController {
             }
         }
     }
+
     @PostMapping(value = "signin")
     public ResponseEntity<AuthDTO> signIn(@RequestBody SignInDTO signInDTO) {
         return ResponseEntity.ok(authService.signIn(signInDTO));
     }
+
     @PostMapping("refresh")
     public ResponseEntity<AuthDTO> refreshToken (@RequestParam("refreshToken") String refreshToken) {
         return ResponseEntity.ok(authService.refreshToken(refreshToken));

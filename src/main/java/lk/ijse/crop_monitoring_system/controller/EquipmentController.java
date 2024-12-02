@@ -68,7 +68,7 @@ public class EquipmentController {
             equipmentService.updateEquipment(equipmentId, equipmentDTO);
             log.info("Status of equipment with ID: {} updated successfully", equipmentId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch (DataPersistFailedException e){
+        }catch (EquipmentNotFoundException e){
             log.warn("No equipment found with ID: {}", equipmentId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
