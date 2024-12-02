@@ -1,9 +1,6 @@
 package lk.ijse.crop_monitoring_system.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,8 +22,10 @@ public class StaffDTO implements Serializable {
     private String lastName;
     private String designation;
     private String gender;
+    @PastOrPresent(message = "Joined Date must not be in the future")
     private LocalDate joinedDate;
     @NotNull(message = "Date of Birth is required")
+    @Past(message = "Date of Birth must be in the past")
     private LocalDate dob;
     private String addressLine01;
     private String addressLine02;
@@ -34,6 +33,7 @@ public class StaffDTO implements Serializable {
     private String addressLine04;
     private String addressLine05;
     @NotNull(message = "Contact No is required")
+    @Pattern(regexp = "^\\d{10}$", message = "Invalid Contact Number format")
     private String contactNo;
     @NotBlank(message = "Email is required")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Email should be valid")
