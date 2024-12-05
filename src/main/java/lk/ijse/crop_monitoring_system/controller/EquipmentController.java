@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class EquipmentController {
     private final EquipmentService equipmentService;
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveEquipment(@RequestBody EquipmentDTO equipmentDTO){
         log.info("Received request to save Equipment: {}", equipmentDTO);
@@ -45,18 +47,21 @@ public class EquipmentController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "/{equipmentId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public EquipmentDTO getEquipment (@PathVariable("equipmentId") String equipmentId) {
         log.info("Equipment with ID: {} retrieved successfully", equipmentId);
         return equipmentService.getSelectedEquipment(equipmentId);
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "allEquipment", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<EquipmentDTO> getAllEquipment(){
         log.info("Get all equipment successfully");
         return equipmentService.getAllEquipment();
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PatchMapping(value = "/{equipmentId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateEquipment(@PathVariable ("equipmentId") String equipmentId, @RequestBody EquipmentDTO equipmentDTO) {
         log.info("Received request to update equipment: {}", equipmentId);
@@ -80,6 +85,7 @@ public class EquipmentController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping(value ="/{equipmentId}" )
     public ResponseEntity<Void> deleteEquipment(@PathVariable ("equipmentId") String equipmentId) {
         log.info("Received request to delete equipment: {}", equipmentId);

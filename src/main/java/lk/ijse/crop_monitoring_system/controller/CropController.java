@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.util.List;
 public class CropController {
     private final CropService cropService;
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> saveCrop(
             @RequestPart ("commonName") String commonName,
@@ -57,6 +59,7 @@ public class CropController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{cropId}")
     public ResponseEntity<Void> deleteCrop(@PathVariable("cropId") String cropId) {
         log.info("Received request to delete crop: {}", cropId);
@@ -73,18 +76,21 @@ public class CropController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "/{cropId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CropDTO getCrop (@PathVariable("cropId") String cropId) {
         log.info("Crop with ID: {} retrieved successfully", cropId);
         return cropService.getSelectedCrop(cropId);
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "allCrop", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CropDTO> getAllCrop(){
         log.info("Get all crops successfully");
         return cropService.getAllCrop();
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PatchMapping(value = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateCrop (
             @PathVariable("id") String cropId,

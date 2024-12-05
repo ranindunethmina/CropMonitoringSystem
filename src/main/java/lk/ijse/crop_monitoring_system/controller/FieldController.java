@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ import java.util.List;
 public class FieldController {
     private final FieldService fieldService;
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> saveField(
             @RequestParam("fieldName")String fieldName,
@@ -63,6 +65,7 @@ public class FieldController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PatchMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateField(
             @PathVariable("id") String fieldCode,
@@ -104,6 +107,8 @@ public class FieldController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{fieldId}")
     public ResponseEntity<Void> deleteField(@PathVariable("fieldId") String fieldId) {
         log.info("Received request to delete field: {}", fieldId);
@@ -120,12 +125,14 @@ public class FieldController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "/{fieldId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public FieldDTO getField (@PathVariable("fieldId") String fieldId) {
         log.info("Field with ID: {} retrieved successfully", fieldId);
         return fieldService.getSelectedField(fieldId);
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "allField", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<FieldDTO> getAllField(){
         log.info("Get all fields successfully");

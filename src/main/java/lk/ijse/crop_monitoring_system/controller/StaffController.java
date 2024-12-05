@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class StaffController {
     private final StaffService staffService;
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveStaff(@RequestBody StaffDTO staffDTO){
         log.info("Received request to save staff: {}", staffDTO);
@@ -45,18 +47,22 @@ public class StaffController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "/{staffId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public StaffDTO getStaff (@PathVariable("staffId") String staffId) {
         log.info("Staff with ID: {} retrieved successfully", staffId);
         return staffService.getSelectedStaff(staffId);
     }
 
+
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     @GetMapping(value = "allStaff", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<StaffDTO>  getAllStaff(){
         log.info("Get all staff successfully");
         return staffService.getAllStaff();
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PatchMapping(value = "/{staffId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateStaff(@PathVariable ("staffId") String staffId, @RequestBody StaffDTO staffDTO) {
         log.info("Received request to update Staff: {}", staffId);
@@ -80,6 +86,7 @@ public class StaffController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping(value ="/{staffId}" )
     public ResponseEntity<Void> deleteStaff(@PathVariable ("staffId") String staffId) {
         log.info("Received request to delete staff: {}", staffId);

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 public class VehicleController {
     private final VehicleService vehicleService;
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> saveVehicle (@RequestBody VehicleDTO vehicleDTO) {
         log.info("Received request to save vehicle: {}", vehicleDTO);
@@ -45,18 +47,21 @@ public class VehicleController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "/{vehicleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public VehicleDTO getVehicle (@PathVariable("vehicleId") String vehicleId) {
         log.info("Vehicle with ID: {} retrieved successfully", vehicleId);
         return vehicleService.getSelectedVehicle(vehicleId);
     }
 
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE')")
     @GetMapping(value = "allVehicle", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VehicleDTO> getAllVehicle(){
         log.info("Get all vehicles successfully");
         return vehicleService.getAllVehicles();
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PatchMapping(value = "/{vehicleId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateVehicle(@PathVariable ("vehicleId") String vehicleId, @RequestBody VehicleDTO vehicleDTO) {
         log.info("Received request to update vehicle: {}", vehicleId);
@@ -80,6 +85,7 @@ public class VehicleController {
         }
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping(value ="/{vehicleId}" )
     public ResponseEntity<Void> deleteVehicle(@PathVariable ("vehicleId") String vehicleId) {
         log.info("Received request to delete vehicle: {}", vehicleId);

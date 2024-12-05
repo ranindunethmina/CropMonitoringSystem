@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,11 @@ import java.util.List;
 public class logController {
     private final LogService logService;
 
+    /**
+     * Create a new log entry.
+     * Only users with the MANAGER role can perform this operation.
+     */
+    @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> saveLog(
             @RequestParam("logDate") String logDate,
@@ -58,18 +64,33 @@ public class logController {
         }
     }
 
+    /**
+     * Retrieve a specific log by its ID.
+     * Accessible by MANAGER, ADMINISTRATIVE, and SCIENTIST roles.
+     */
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "/{logId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public LogDTO getLog (@PathVariable("logId") String logId) {
         log.info("Log with ID: {} retrieved successfully", logId);
         return logService.getSelectedLog(logId);
     }
 
+    /**
+     * Retrieve all logs.
+     * Accessible by MANAGER, ADMINISTRATIVE, and SCIENTIST roles.
+     */
+    @PreAuthorize("hasRole('MANAGER') or hasRole('ADMINISTRATIVE') or hasRole('SCIENTIST')")
     @GetMapping(value = "allLogs", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<LogDTO> getAllLogs() {
         log.info("Get all logs successfully");
         return logService.getAllLog();
     }
 
+    /**
+     * Update an existing log.
+     * Only users with the MANAGER role can perform this operation.
+     */
+    @PreAuthorize("hasRole('MANAGER')")
     @PatchMapping(value = "/{logId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateLog(
             @PathVariable("logId") String logCode,
@@ -86,7 +107,7 @@ public class logController {
             logDTO.setObservedImage(updateBase64logImage);
 
             logService.updateLog(logCode, logDTO);
-            log.info("Vehicle updated successfully: {}", logCode);
+            log.info("Log updated successfully: {}", logCode);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (LogNotFoundException e){
             log.warn("No logs found with ID: {}", logCode);
@@ -100,11 +121,16 @@ public class logController {
         }
     }
 
+    /**
+     * Delete a specific log by its ID.
+     * Only users with the MANAGER role can perform this operation.
+     */
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping(value = "/{logId}" )
     public ResponseEntity<Void> deleteLog(@PathVariable ("logId") String logId) {
         try {
             logService.deleteLog(logId);
-            log.info("Vehicle deleted successfully: {}", logId);
+            log.info("Log deleted successfully: {}", logId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (LogNotFoundException e){
             log.error("failed due to data persistence issue.");
