@@ -26,10 +26,9 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public void saveStaff(StaffDTO staffDTO) {
         staffDTO.setId(AppUtil.createStaffId());
-        var staff = mapping.convertToStaff(staffDTO);
-        var savedStaff = staffRepository.save(staff);
+        var savedStaff = staffRepository.save(mapping.convertToStaff(staffDTO));
         if (savedStaff == null) {
-            throw new DataPersistFailedException("Can't save the staff");
+            throw new DataPersistFailedException("Can't save staff");
         }
     }
 

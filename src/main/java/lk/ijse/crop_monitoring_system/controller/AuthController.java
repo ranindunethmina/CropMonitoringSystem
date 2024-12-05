@@ -25,7 +25,7 @@ public class AuthController {
 
     @PostMapping(value = "signup",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthDTO> signUp(@RequestBody UserDTO userDTO){
-        log.info("Received request to save user: {}", userDTO);
+        log.info("Received request to save user");
         if (userDTO == null){
             log.warn("Received null userDTO");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

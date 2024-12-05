@@ -25,10 +25,9 @@ public class CropServiceImpl implements CropService {
     @Override
     public void saveCrop(CropDTO cropDTO) {
         cropDTO.setCropCode(AppUtil.createCropCode());
-        var crop = mapping.convertToCrop(cropDTO);
-        var savedCrop = cropRepository.save(crop);
+        var savedCrop = cropRepository.save(mapping.convertToCrop(cropDTO));
         if (savedCrop == null) {
-            throw new DataPersistFailedException("Cannot save crop");
+            throw new DataPersistFailedException("Can't save crop");
         }
     }
 

@@ -32,6 +32,9 @@ public class StaffController {
                 staffService.saveStaff(staffDTO);
                 log.info("Staff saved successfully: {}", staffDTO.getId());
                 return new ResponseEntity<>(HttpStatus.CREATED);
+            }catch (StaffNotFoundException e) {
+                log.error("Staff not found");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }catch (DataPersistFailedException e){
                 log.error("failed due to data persistence issue.");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -66,8 +69,11 @@ public class StaffController {
             log.info("Staff updated successfully: {}", staffId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (StaffNotFoundException e){
-            log.warn("Staff not found for update: {}", staffId);
+            log.warn("No staff found with ID: {}", staffId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (DataPersistFailedException e){
+            log.error("failed due to data persistence issue.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             log.error("Something went wrong while updating staff.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

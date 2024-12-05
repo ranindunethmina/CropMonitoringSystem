@@ -1,7 +1,6 @@
 package lk.ijse.crop_monitoring_system.service.impl;
 
 import lk.ijse.crop_monitoring_system.dto.UserDTO;
-import lk.ijse.crop_monitoring_system.entity.User;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
 import lk.ijse.crop_monitoring_system.exception.UserNotFoundException;
 import lk.ijse.crop_monitoring_system.repository.UserRepository;
@@ -23,9 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(UserDTO userDTO) {
-        User savedUser = userRepository.save(mapping.convertToUser(userDTO));
+        var savedUser = userRepository.save(mapping.convertToUser(userDTO));
         if(savedUser == null ) {
-            throw new DataPersistFailedException("Cannot data saved");
+            throw new DataPersistFailedException("Can't save user");
         }
     }
 

@@ -44,7 +44,7 @@ public class logController {
             logDTO.setStaffIds(staffIds);
 
             logService.saveLog(logDTO);
-            log.info("Save logs success");
+            log.info("Logs saved Successfully: {}", logDTO.getLogCode());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (LogNotFoundException e) {
             log.error("Log not found");
@@ -86,7 +86,7 @@ public class logController {
             logDTO.setObservedImage(updateBase64logImage);
 
             logService.updateLog(logCode, logDTO);
-            log.info("Status of log with ID: {} updated successfully", logCode);
+            log.info("Vehicle updated successfully: {}", logCode);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (LogNotFoundException e){
             log.warn("No logs found with ID: {}", logCode);
@@ -95,7 +95,7 @@ public class logController {
             log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
-            log.error("Something went wrong while updating logs with ID: {}", logCode);
+            log.error("Something went wrong while updating log.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -104,13 +104,13 @@ public class logController {
     public ResponseEntity<Void> deleteLog(@PathVariable ("logId") String logId) {
         try {
             logService.deleteLog(logId);
-            log.info("Log with ID: {} deleted successfully", logId);
+            log.info("Vehicle deleted successfully: {}", logId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (LogNotFoundException e){
-            log.warn("No logs found with ID: {}", logId);
+            log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
-            log.error("Something went wrong while deleting log with ID: {}", logId);
+            log.error("Something went wrong while deleting log.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

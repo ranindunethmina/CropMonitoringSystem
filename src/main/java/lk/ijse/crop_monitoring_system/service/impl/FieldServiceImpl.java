@@ -27,10 +27,9 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public void saveField(FieldDTO fieldDTO) {
         fieldDTO.setFieldCode(AppUtil.createFieldId());
-        var field = mapping.convertToField(fieldDTO);
-        var savedField = fieldRepository.save(field);
+        var savedField = fieldRepository.save(mapping.convertToField(fieldDTO));
         if (savedField == null) {
-            throw new DataPersistFailedException("Cannot save field");
+            throw new DataPersistFailedException("Can't save field");
         }
     }
 

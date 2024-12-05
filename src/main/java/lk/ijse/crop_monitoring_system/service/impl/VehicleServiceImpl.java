@@ -26,10 +26,9 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public void saveVehicle(VehicleDTO vehicleDTO) {
         vehicleDTO.setVehicleCode(AppUtil.createVehicleCode());
-        var vehicle = mapping.convertToVehicle(vehicleDTO);
-        var savedVehicle = vehicleRepository.save(vehicle);
+        var savedVehicle = vehicleRepository.save(mapping.convertToVehicle(vehicleDTO));
         if (savedVehicle == null) {
-            throw new DataPersistFailedException("Cannot save vehicle");
+            throw new DataPersistFailedException("Can't save vehicle");
         }
     }
 

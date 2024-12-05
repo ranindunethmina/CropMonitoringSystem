@@ -91,6 +91,7 @@ public class Mapping {
         return modelMapper.map(equipmentList, new TypeToken<List<EquipmentDTO>>() {}.getType());
     }
 
+
     public User convertToUser(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
     }

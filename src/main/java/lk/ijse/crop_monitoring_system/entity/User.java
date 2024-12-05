@@ -32,36 +32,30 @@ public class User implements UserDetails{
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
         return authorities;
-//        return List.of();
     }
 
     @Override
     public String getUsername() {
         return email;
-//        return "";
     }
 
     @Override
     public boolean isAccountNonExpired() {
         return true;
-//        return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
         return true;
-//        return UserDetails.super.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-//        return UserDetails.super.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
         return true;
-//        return UserDetails.super.isEnabled();
     }
 }

@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +43,7 @@ public class CropController {
             cropDTO.setFieldCode(fieldCode);
 
             cropService.saveCrop(cropDTO);
-            log.info("Save crop successfully");
+            log.info("Crop saved Successfully: {}", cropDTO.getCropCode());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (CropNotFoundException e) {
             log.error("Crop not found");
@@ -60,15 +59,16 @@ public class CropController {
 
     @DeleteMapping("/{cropId}")
     public ResponseEntity<Void> deleteCrop(@PathVariable("cropId") String cropId) {
+        log.info("Received request to delete crop: {}", cropId);
         try {
             cropService.deleteCrop(cropId);
-            log.info("Crop with ID: {} deleted successfully", cropId);
+            log.info("Crop deleted successfully: {}", cropId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (CropNotFoundException e) {
-            log.warn("No Crop found with ID: {}", cropId);
+            log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error("Something went wrong while deleting crop with ID: {}", cropId);
+            log.error("Something went wrong while deleting vehicle.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -79,7 +79,6 @@ public class CropController {
         return cropService.getSelectedCrop(cropId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "allCrop", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CropDTO> getAllCrop(){
         log.info("Get all crops successfully");
@@ -108,7 +107,7 @@ public class CropController {
             updateCrop.setFieldCode(fieldCode);
 
             cropService.updateCrop(cropId, updateCrop);
-            log.info("Status of crop with ID: {} updated successfully", cropId);
+            log.info("Crop updated successfully: {}", cropId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (CropNotFoundException e) {
             log.warn("No crop found with ID: {}", cropId);
@@ -117,7 +116,7 @@ public class CropController {
             log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
-            log.error("Something went wrong while updating crop with ID: {}", cropId);
+            log.error("Something went wrong while updating crop.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

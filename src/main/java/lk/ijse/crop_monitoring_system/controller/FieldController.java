@@ -49,7 +49,7 @@ public class FieldController {
             fieldDTO.setFieldImage2(base64fieldImage2);
 
             fieldService.saveField(fieldDTO);
-            log.info("Save Field successfully");
+            log.info("Field saved Successfully: {}", fieldDTO.getFieldCode());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (FieldNotFoundException e) {
             log.error("Field not found");
@@ -91,7 +91,7 @@ public class FieldController {
             fieldDTO.setFieldImage2(updateBase64fieldImage2);
 
             fieldService.updateField(staffIds, fieldDTO);
-            log.info("Update Field successfully");
+            log.info("Field updated successfully: {}",fieldCode);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (FieldNotFoundException e) {
             log.error("Field not found");
@@ -106,15 +106,16 @@ public class FieldController {
     }
     @DeleteMapping("/{fieldId}")
     public ResponseEntity<Void> deleteField(@PathVariable("fieldId") String fieldId) {
+        log.info("Received request to delete field: {}", fieldId);
         try {
             fieldService.deleteField(fieldId);
-            log.info("Field with ID: {} deleted successfully", fieldId);
+            log.info("Field deleted successfully: {}", fieldId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (FieldNotFoundException e) {
-            log.warn("No Field found with ID: {}", fieldId);
+            log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error("Something went wrong while deleting field with ID: {}", fieldId);
+            log.error("Something went wrong while deleting field.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

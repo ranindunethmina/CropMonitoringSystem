@@ -32,6 +32,9 @@ public class VehicleController {
                 vehicleService.saveVehicle(vehicleDTO);
                 log.info("Vehicle saved Successfully: {}", vehicleDTO.getVehicleCode());
                 return new ResponseEntity<>(HttpStatus.CREATED);
+            }catch (VehicleNotFoundException e) {
+                log.error("Vehicle not found");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }catch (DataPersistFailedException e){
                 log.error("failed due to data persistence issue.");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -66,8 +69,11 @@ public class VehicleController {
             log.info("Vehicle updated successfully: {}", vehicleId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (VehicleNotFoundException e){
-            log.error("failed due to data persistence issue.");
+            log.warn("No Vehicle found with Id: {}", vehicleId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (DataPersistFailedException e){
+            log.error("failed due to data persistence issue.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             log.error("Something went wrong while updating vehicle.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -29,7 +29,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         var equipment = mapping.convertToEquipment(equipmentDTO);
         var savedEquipment = equipmentRepository.save(equipment);
         if (savedEquipment == null){
-            throw new DataPersistFailedException("Cannot save equipment");
+            throw new DataPersistFailedException("Can't save equipment");
         }
     }
 
@@ -37,7 +37,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     public void updateEquipment(String equipmentId, EquipmentDTO equipmentDTO) {
         Optional<Equipment> tmpEquipmentEntity = equipmentRepository.findById(equipmentId);
         if (!tmpEquipmentEntity.isPresent()) {
-            throw new EquipmentNotFoundException("Cannot find equipment");
+            throw new EquipmentNotFoundException("Equipment not found");
         }else {
             tmpEquipmentEntity.get().setName(equipmentDTO.getName());
             tmpEquipmentEntity.get().setType(equipmentDTO.getType());
@@ -49,7 +49,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     public void deleteEquipment(String equipmentId) {
         Optional<Equipment> findId = equipmentRepository.findById(equipmentId);
         if (!findId.isPresent()) {
-            throw new EquipmentNotFoundException("Cannot find equipment");
+            throw new EquipmentNotFoundException("Equipment not found");
         } else {
             equipmentRepository.deleteById(equipmentId);
         }
@@ -60,7 +60,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (equipmentRepository.existsById(equipmentId)) {
             return mapping.convertToEquipmentDTO(equipmentRepository.getReferenceById(equipmentId));
         }else {
-            throw new EquipmentNotFoundException("Cannot find equipment");
+            throw new EquipmentNotFoundException("Equipment not found");
         }
     }
 

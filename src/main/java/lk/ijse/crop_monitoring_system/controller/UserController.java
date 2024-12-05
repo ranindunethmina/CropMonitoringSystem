@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,28 +23,29 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable ("id") String userId) {
+        log.info("Received request to delete user: {}", userId);
         try {
-            log.info("Request to delete user with ID: {}", userId);
             userService.deleteUser(userId);
-            log.info("User with ID: {} deleted successfully", userId);
+            log.info("User deleted successfully: {}", userId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (UserNotFoundException e) {
-            log.warn("User with ID: {} not found", userId);
+            log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.error("Failed to delete user with ID: {}", userId, e);
+            log.error("Something went wrong while deleting vehicle.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO getSelectedUser(@PathVariable ("id") String userId){
+        log.info("Vehicle with ID: {} retrieved successfully", userId);
         return userService.getUser(userId);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "allVehicle",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserDTO> getAllUsers(){
+        log.info("Get all users successfully");
         return userService.getAllUsers();
     }
 
@@ -61,8 +61,11 @@ public class UserController {
             log.info("User updated successfully: {}", userDTO.getEmail());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (UserNotFoundException e){
-            log.warn("User not found for update: {}", userId);
+            log.warn("No user found with ID: {}", userId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (DataPersistFailedException e){
+            log.error("failed due to data persistence issue.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             log.error("Something went wrong while updating user.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

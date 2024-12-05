@@ -62,17 +62,20 @@ public class EquipmentController {
         log.info("Received request to update equipment: {}", equipmentId);
         try {
             if (equipmentDTO == null && (equipmentId == null || equipmentId.isEmpty())) {
-                log.warn("No equipment found with ID: {}", equipmentId);
+                log.warn("Received null vehicleId for update");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             equipmentService.updateEquipment(equipmentId, equipmentDTO);
-            log.info("Status of equipment with ID: {} updated successfully", equipmentId);
+            log.info("Equipment updated successfully: {}", equipmentId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (EquipmentNotFoundException e){
-            log.warn("No equipment found with ID: {}", equipmentId);
+            log.info("Equipment not found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (DataPersistFailedException e){
+            log.warn("Equipment not found for update: {}", equipmentId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
-            log.error("Something went wrong while updating equipment with ID: {}", equipmentId);
+            log.error("Something went wrong while updating vehicle.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -82,13 +85,13 @@ public class EquipmentController {
         log.info("Received request to delete equipment: {}", equipmentId);
         try {
             equipmentService.deleteEquipment(equipmentId);
-            log.info("Status of equipment with ID: {} deleted successfully", equipmentId);
+            log.info("Equipment deleted successfully: {}", equipmentId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (EquipmentNotFoundException e){
-            log.warn("Equipment not found with ID: {}", equipmentId);
+            log.error("failed due to data persistence issue.");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }catch (Exception e){
-            log.error("Something went wrong while deleting equipment with ID: {}", equipmentId);
+            log.error("Something went wrong while deleting equipment.");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

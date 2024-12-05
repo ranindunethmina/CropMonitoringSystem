@@ -19,7 +19,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final JWTService jwtService;
     private final Mapping mapping;
-    //utils
+
     private final AuthenticationManager authenticationManager;
 
     @Override

@@ -57,7 +57,7 @@ public class LogServiceImpl implements LogService {
 
         var savedLog = logRepository.save(log);
         if (savedLog == null){
-            throw new DataPersistFailedException("Could not save log");
+            throw new DataPersistFailedException("Can't save log");
         }
     }
 
