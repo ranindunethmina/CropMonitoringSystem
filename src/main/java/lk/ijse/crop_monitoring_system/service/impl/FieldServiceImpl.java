@@ -67,7 +67,7 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public FieldDTO getSelectedField(String fieldId) {
         if (fieldRepository.existsById(fieldId)) {
-            return mapping.convertToFieldDTO(fieldRepository.getReferenceById(fieldId));
+            return mapping.convertToFieldDTO(fieldRepository.getFieldByFieldCode(fieldId));
         }else {
             throw new FieldNotFoundException("Field not found");
         }

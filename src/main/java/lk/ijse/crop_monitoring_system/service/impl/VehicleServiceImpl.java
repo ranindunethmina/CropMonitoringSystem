@@ -4,7 +4,9 @@ import lk.ijse.crop_monitoring_system.dto.VehicleDTO;
 import lk.ijse.crop_monitoring_system.entity.Status;
 import lk.ijse.crop_monitoring_system.entity.Vehicle;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
+import lk.ijse.crop_monitoring_system.exception.DuplicateLicensePlateException;
 import lk.ijse.crop_monitoring_system.exception.VehicleNotFoundException;
+import lk.ijse.crop_monitoring_system.repository.StaffRepository;
 import lk.ijse.crop_monitoring_system.repository.VehicleRepository;
 import lk.ijse.crop_monitoring_system.service.VehicleService;
 import lk.ijse.crop_monitoring_system.util.AppUtil;
@@ -21,10 +23,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
     private final VehicleRepository vehicleRepository;
+    private final StaffRepository staffRepository;
     private final Mapping mapping;
 
     @Override
     public void saveVehicle(VehicleDTO vehicleDTO) {
+        List<VehicleDTO> allVehicle = getAllVehicles();
+        for (int i=0; i<allVehicle.size(); i++){
+            if (allVehicle.get(i).getLicensePlate().equals(vehicleDTO.getLicensePlate())){
+                throw new DuplicateLicensePlateException("This license plate number already exists :" + vehicleDTO.getLicensePlate());
+            }
+        }
         vehicleDTO.setVehicleCode(AppUtil.createVehicleCode());
         var savedVehicle = vehicleRepository.save(mapping.convertToVehicle(vehicleDTO));
         if (savedVehicle == null) {
@@ -43,6 +52,7 @@ public class VehicleServiceImpl implements VehicleService {
             tmpVehicleEntity.get().setFuelType(vehicleDTO.getFuelType());
             tmpVehicleEntity.get().setStatus(Status.valueOf(vehicleDTO.getStatus()));
             tmpVehicleEntity.get().setRemarks(vehicleDTO.getRemarks());
+            tmpVehicleEntity.get().setStaff(staffRepository.getStaffMemberById(vehicleDTO.getStaffId()));
         }
     }
 

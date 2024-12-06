@@ -44,7 +44,7 @@ public class CropController {
             cropDTO.setSeason(season);
             cropDTO.setFieldCode(fieldCode);
 
-            cropService.saveCrop(cropDTO);
+            cropService.saveCrop(cropDTO,fieldCode);
             log.info("Crop saved Successfully: {}", cropDTO.getCropCode());
             return new ResponseEntity<>(HttpStatus.CREATED);
         }catch (CropNotFoundException e) {
@@ -112,7 +112,7 @@ public class CropController {
             updateCrop.setSeason(updateSeason);
             updateCrop.setFieldCode(fieldCode);
 
-            cropService.updateCrop(cropId, updateCrop);
+            cropService.updateCrop(cropId, updateCrop,fieldCode);
             log.info("Crop updated successfully: {}", cropId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (CropNotFoundException e) {

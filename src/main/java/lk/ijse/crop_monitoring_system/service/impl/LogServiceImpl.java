@@ -85,8 +85,31 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public LogDTO getSelectedLog(String logId) {
-        if (logRepository.existsById(logId)){
-            return mapping.convertToLogDTO(logRepository.getReferenceById(logId));
+        Optional<Log> cropDetailsByLogCode = logRepository.findById(logId);
+        if (cropDetailsByLogCode.isPresent()){
+            LogDTO logDTO = mapping.convertToLogDTO(cropDetailsByLogCode.get());
+            if (cropDetailsByLogCode.get().getField() != null){
+                List<String> fieldCodes = new ArrayList<>();
+                cropDetailsByLogCode.get().getField().forEach(
+                        field -> fieldCodes.add(field.getFieldCode())
+                );
+                logDTO.setFieldCodes(fieldCodes);
+            }
+            if (cropDetailsByLogCode.get().getCrop() != null){
+                List<String> cropCodes = new ArrayList<>();
+                cropDetailsByLogCode.get().getCrop().forEach(
+                        crop -> cropCodes.add(crop.getCropCode())
+                );
+                logDTO.setCropCodes(cropCodes);
+            }
+            if (cropDetailsByLogCode.get().getStaff() != null){
+                List<String> staffIds = new ArrayList<>();
+                cropDetailsByLogCode.get().getStaff().forEach(
+                        staff -> staffIds.add(staff.getId())
+                );
+                logDTO.setStaffIds(staffIds);
+            }
+            return logDTO;
         } else {
             throw new LogNotFoundException("Log not found");
         }

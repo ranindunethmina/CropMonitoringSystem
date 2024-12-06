@@ -2,9 +2,12 @@ package lk.ijse.crop_monitoring_system.service.impl;
 
 import lk.ijse.crop_monitoring_system.dto.CropDTO;
 import lk.ijse.crop_monitoring_system.entity.Crop;
+import lk.ijse.crop_monitoring_system.entity.Field;
 import lk.ijse.crop_monitoring_system.exception.CropNotFoundException;
 import lk.ijse.crop_monitoring_system.exception.DataPersistFailedException;
+import lk.ijse.crop_monitoring_system.exception.FieldNotFoundException;
 import lk.ijse.crop_monitoring_system.repository.CropRepository;
+import lk.ijse.crop_monitoring_system.repository.FieldRepository;
 import lk.ijse.crop_monitoring_system.service.CropService;
 import lk.ijse.crop_monitoring_system.util.AppUtil;
 import lk.ijse.crop_monitoring_system.util.Mapping;
@@ -20,23 +23,33 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CropServiceImpl implements CropService {
     private final CropRepository cropRepository;
+    private final FieldRepository fieldRepository;
     private final Mapping mapping;
 
     @Override
-    public void saveCrop(CropDTO cropDTO) {
+    public void saveCrop(CropDTO cropDTO, String fieldCode) {
         cropDTO.setCropCode(AppUtil.createCropCode());
-        var savedCrop = cropRepository.save(mapping.convertToCrop(cropDTO));
+        var crop = mapping.convertToCrop(cropDTO);
+        Field field = fieldRepository.findById(fieldCode).orElseThrow(
+                () -> new FieldNotFoundException("Field not found")
+        );
+        crop.setField(field);
+        var savedCrop = cropRepository.save(crop);
         if (savedCrop == null) {
             throw new DataPersistFailedException("Can't save crop");
         }
     }
 
     @Override
-    public void updateCrop(String cropId, CropDTO cropDTO) {
+    public void updateCrop(String cropId, CropDTO cropDTO, String fieldCode) {
         Optional<Crop> tmpCropEntity = cropRepository.findById(cropId);
         if (!tmpCropEntity.isPresent()) {
             throw new CropNotFoundException("Crop not found");
         } else {
+            Field field = fieldRepository.findById(fieldCode).orElseThrow(
+                    () -> new FieldNotFoundException("Field not found")
+            );
+            tmpCropEntity.get().setField(field);
             tmpCropEntity.get().setCommonName(cropDTO.getCommonName());
             tmpCropEntity.get().setScientificName(cropDTO.getScientificName());
             tmpCropEntity.get().setCropImage(cropDTO.getCropImage());

@@ -68,7 +68,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public StaffDTO getSelectedStaff(String staffId) {
         if (staffRepository.existsById(staffId)) {
-            return mapping.convertToStaffDTO(staffRepository.getReferenceById(staffId));
+            return mapping.convertToStaffDTO(staffRepository.getStaffMemberById(staffId));
         } else {
             throw new StaffNotFoundException("Staff not found");
         }
